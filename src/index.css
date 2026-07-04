@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+:root {
+  --mepromas-blue: #1E3A5F;
+  --mepromas-accent: #2563EB;
+  --mepromas-green: #0A7A4C;
+  --mepromas-red: #B91C1C;
+  --mepromas-orange: #D97706;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #F4F6FA;
+  color: #1a1a2e;
+}
+
+.scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: #f1f1f1; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 2px; }
