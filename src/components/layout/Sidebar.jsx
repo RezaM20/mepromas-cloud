@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
-import { LayoutDashboard, Database, FileText, QrCode, Settings, Shield, LogOut } from 'lucide-react'
+import { LayoutDashboard, Database, FileText, QrCode, Settings, Shield, LogOut, Droplet } from 'lucide-react'
 
 export function Sidebar({ onClose }) {
   const { t, i18n } = useTranslation()
@@ -13,6 +13,7 @@ export function Sidebar({ onClose }) {
     { to: '/protokolle',icon: FileText,          label: t('nav.protokolle') },
   ]
   if (profile?.rolle !== 'kunde') navItems.push({ to: '/codes', icon: QrCode, label: t('nav.codes') })
+  navItems.push({ to: '/brunnen', icon: Droplet, label: t('nav.brunnen') })
   navItems.push({ to: '/einstellungen', icon: Settings, label: t('nav.einstellungen') })
   if (profile?.rolle === 'admin') navItems.push({ to: '/admin', icon: Shield, label: t('nav.admin') })
 

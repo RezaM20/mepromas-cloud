@@ -12,6 +12,7 @@ import ProtokollDetail from './pages/protokolle/ProtokollDetail'
 import Einstellungen from './pages/einstellungen/Einstellungen'
 import Codes from './pages/codes/Codes'
 import Admin from './pages/admin/Admin'
+import BrunnenMonitor from './modules/BrunnenMonitor'
 import { RoleRoute } from './components/auth/RoleRoute'
 
 function ProtectedRoute({ children }) {
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/protokolle/neu" element={<RoleRoute erlaubt={['admin','techniker']}><ProtokollNeu /></RoleRoute>} />
           <Route path="/protokoll/:id" element={<ProtokollDetail />} />
           <Route path="/codes"         element={<RoleRoute erlaubt={['admin','techniker']}><Codes /></RoleRoute>} />
+          <Route path="/brunnen"       element={<BrunnenMonitor />} />
           <Route path="/einstellungen" element={<Einstellungen />} />
           <Route path="/admin"         element={<RoleRoute erlaubt={['admin']}><Admin /></RoleRoute>} />
         </Route>

@@ -9,6 +9,7 @@ import { Button } from '../../components/ui/Button'
 import { PRUEFSCHRITTE, leereDatenJson } from '../../lib/pruefschritte'
 import { messwerteAusDatenJson, protokollBestanden } from '../../lib/bewertung'
 import { speichernOderPuffern } from '../../lib/offline'
+import { etikettenDrucken, etikettAusProtokoll } from '../../lib/etiketten'
 
 export default function ProtokollNeu() {
   const { t } = useTranslation()
@@ -59,10 +60,8 @@ export default function ProtokollNeu() {
     if (!form.anlage_id) { setError('Bitte Anlage auswählen.'); return }
     setSaving(true)
 
-    // ID clientseitig vergeben — nötig für Offline-Erfassung und Messwert-Referenz
     const protokollId = crypto.randomUUID()
 
-    // Maschinelle Grenzwert-Bewertung: bei Verletzung Ergebnis automatisch auf 'mangel'
     const bewertung = protokollBestanden(form.kind, form.daten_json)
     const ergebnis = bewertung === false ? 'mangel' : form.ergebnis
 
@@ -173,6 +172,10 @@ export default function ProtokollNeu() {
             <div className="flex gap-3 pt-1">
               <Button type="submit" variant="success" disabled={saving}>{saving ? t('common.loading') : t('protokoll.save')}</Button>
               <Button variant="ghost" onClick={()=>navigate(-1)}>{t('common.cancel')}</Button>
+              <Button type="button" variant="ghost" onClick={()=>{
+                const anlage = anlagen.find(a=>a.id===form.anlage_id)
+                etikettenDrucken([etikettAusProtokoll(form, anlage?.name)])
+              }}>🏷️ Aufkleber drucken</Button>
             </div>
           </div>
         </Card>

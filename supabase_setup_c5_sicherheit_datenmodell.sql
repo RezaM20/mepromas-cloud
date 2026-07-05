@@ -78,12 +78,18 @@ create table if not exists public.messwerte (
 
 alter table public.messwerte enable row level security;
 
+drop policy if exists "Eigene Messwerte lesen"   on public.messwerte;
+drop policy if exists "Eigene Messwerte anlegen" on public.messwerte;
+drop policy if exists "Eigene Messwerte ändern"  on public.messwerte;
+drop policy if exists "Eigene Messwerte löschen" on public.messwerte;
+
 create policy "Eigene Messwerte lesen"   on public.messwerte for select using (auth.uid() = user_id);
 create policy "Eigene Messwerte anlegen" on public.messwerte for insert with check (auth.uid() = user_id);
 create policy "Eigene Messwerte ändern"  on public.messwerte for update using (auth.uid() = user_id);
 create policy "Eigene Messwerte löschen" on public.messwerte for delete using (auth.uid() = user_id);
 
 -- Kunden-Lesezugriff analog Freigaben (C3)
+drop policy if exists "Freigegebene Messwerte lesen (Kunde)" on public.messwerte;
 create policy "Freigegebene Messwerte lesen (Kunde)" on public.messwerte
   for select using (
     exists (
