@@ -58,6 +58,7 @@ export function baueEtikettHtml(item) {
             `<div style="font-size:4pt;color:#444;margin-top:0.5pt;">${fLbl}</div>` +
             `<div style="font-size:9pt;font-weight:900;color:#111;line-height:1.05;margin-top:1pt;">${item.datum || ''}</div>` +
             `<div style="font-size:4.5pt;color:#333;margin-top:1.5pt;"><b style="color:#1a1a6e;">Prüfer:</b> ${item.pruefer || '–'}</div>` +
+            (item.norm ? `<div style="font-size:3.9pt;color:#555;margin-top:1pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><b style="color:#1a1a6e;">Norm:</b> ${item.norm}</div>` : '') +
           `</div>` +
           `<div>` +
             `<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;display:inline-flex;align-items:center;gap:2pt;background:${badgeBg};color:#fff;font-size:5pt;font-weight:800;border-radius:2pt;padding:1.3pt 4.5pt;white-space:nowrap;"><span style="font-size:6pt;">${icon}</span> ${label}</div>` +
@@ -105,6 +106,7 @@ export function etikettAusProtokoll(form, anlageName) {
     anlagenNr: form.anlage_id || '',
     pruefer: form.pruefer || '',
     datum: form.datum || '',
+    norm: form.kind || '',
     bestanden: form.ergebnis === 'ok'
   }
 }
