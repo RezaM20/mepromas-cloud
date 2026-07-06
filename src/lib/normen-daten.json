@@ -1,0 +1,9 @@
+﻿[
+  { "id": 1, "norm": "DIN VDE 0100-600", "titel": "Errichten von Niederspannungsanlagen – Prüfungen", "kategorie": "Ortsfeste Anlagen" },
+  { "id": 2, "norm": "DIN VDE 0100-702", "titel": "Anlagen in Becken von Schwimmbädern und anderen Becken", "kategorie": "Brunnen/Becken" },
+  { "id": 3, "norm": "DIN VDE 0105-100", "titel": "Betrieb von elektrischen Anlagen", "kategorie": "Ortsfeste Anlagen" },
+  { "id": 4, "norm": "DIN VDE 0701-0702", "titel": "Prüfung nach Instandsetzung – Wiederholungsprüfung ortsveränderlicher Geräte", "kategorie": "Ortsveränderliche Geräte" },
+  { "id": 5, "norm": "DIN VDE 0100-430", "titel": "Schutz bei Überstrom", "kategorie": "Planung/Berechnung" },
+  { "id": 6, "norm": "DGUV V3", "titel": "Elektrische Anlagen und Betriebsmittel – Unfallverhütungsvorschrift", "kategorie": "Arbeitsschutz" },
+  { "id": 7, "norm": "TRBS 1201", "titel": "Prüfungen von Arbeitsmitteln und überwachungsbedürftigen Anlagen", "kategorie": "Arbeitsschutz" }
+]
