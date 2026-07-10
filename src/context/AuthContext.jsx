@@ -28,14 +28,16 @@ export function AuthProvider({ children }) {
     setLoading(false)
   }
 
-  async function signIn(email, password) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+  async function signIn(email, password, captchaToken) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password,
+      options: { captchaToken }
+    })
     return { error }
   }
 
-  async function signUp(email, password, name, firma) {
+  async function signUp(email, password, name, firma, captchaToken) {
     const { error } = await supabase.auth.signUp({ email, password,
-      options: { data: { name, firma } }
+      options: { data: { name, firma }, captchaToken }
     })
     // Hinweis: Das Profil in public.profiles wird jetzt zuverlässig per
     // Datenbank-Trigger (handle_new_user, siehe supabase_setup_fix_profiles.sql)

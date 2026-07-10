@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { Zap } from 'lucide-react'
+import { Turnstile } from '@marsidev/react-turnstile'
+
+// Cloudflare Turnstile Site Key (öffentlich, analog zum Supabase-Anon-Key).
+// Muss in .env als VITE_TURNSTILE_SITE_KEY gesetzt sein — sonst kann die
+// Sicherheitsabfrage nicht angezeigt werden und Login/Register bleiben
+// gesperrt (Supabase verlangt server-seitig einen captcha_token).
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 
 export default function Login() {
   const { t, i18n } = useTranslation()
@@ -13,14 +20,33 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const turnstileRef = useRef(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(''); setLoading(true)
-    const { error } = await signIn(form.email, form.password)
+    setError('')
+
+    if (!captchaToken) {
+      setError('Bitte Sicherheitsabfrage bestätigen, bevor du dich anmeldest.')
+      return
+    }
+
+    setLoading(true)
+    const { error } = await signIn(form.email, form.password, captchaToken)
     setLoading(false)
-    if (error) setError(error.message)
-    else navigate('/dashboard')
+
+    if (error) {
+      setError(
+        error.message?.toLowerCase().includes('captcha')
+          ? 'Sicherheitsabfrage fehlgeschlagen oder abgelaufen. Bitte erneut versuchen.'
+          : error.message
+      )
+      turnstileRef.current?.reset()
+      setCaptchaToken('')
+    } else {
+      navigate('/dashboard')
+    }
   }
 
   return (
@@ -48,9 +74,23 @@ export default function Login() {
               value={form.password} onChange={e => setForm(f=>({...f,password:e.target.value}))}
               placeholder="••••••••" />
 
+            {TURNSTILE_SITE_KEY ? (
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={TURNSTILE_SITE_KEY}
+                onSuccess={setCaptchaToken}
+                onExpire={() => setCaptchaToken('')}
+                onError={() => { setCaptchaToken(''); setError('Sicherheitsabfrage konnte nicht geladen werden.') }}
+              />
+            ) : (
+              <div className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">
+                ⚠️ VITE_TURNSTILE_SITE_KEY ist nicht konfiguriert — Anmeldung nicht möglich.
+              </div>
+            )}
+
             {error && <div className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</div>}
 
-            <Button type="submit" size="lg" disabled={loading} className="w-full mt-2">
+            <Button type="submit" size="lg" disabled={loading || !captchaToken} className="w-full mt-2">
               {loading ? t('auth.logging_in') : t('auth.login')}
             </Button>
           </form>

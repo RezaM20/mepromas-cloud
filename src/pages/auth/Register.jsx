@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { Zap } from 'lucide-react'
+import { Turnstile } from '@marsidev/react-turnstile'
+
+// Cloudflare Turnstile Site Key — siehe Kommentar in Login.jsx.
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 
 export default function Register() {
   const { t } = useTranslation()
@@ -13,17 +17,31 @@ export default function Register() {
   const [form, setForm] = useState({ name:'', email:'', firma:'', password:'', password2:'' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const turnstileRef = useRef(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     if (form.password !== form.password2) { setError('Passwörter stimmen nicht überein.'); return }
     if (form.password.length < 6) { setError('Passwort mindestens 6 Zeichen.'); return }
+    if (!captchaToken) { setError('Bitte Sicherheitsabfrage bestätigen, bevor du dich registrierst.'); return }
+
     setLoading(true)
-    const { error } = await signUp(form.email, form.password, form.name, form.firma)
+    const { error } = await signUp(form.email, form.password, form.name, form.firma, captchaToken)
     setLoading(false)
-    if (error) setError(error.message)
-    else navigate('/dashboard')
+
+    if (error) {
+      setError(
+        error.message?.toLowerCase().includes('captcha')
+          ? 'Sicherheitsabfrage fehlgeschlagen oder abgelaufen. Bitte erneut versuchen.'
+          : error.message
+      )
+      turnstileRef.current?.reset()
+      setCaptchaToken('')
+    } else {
+      navigate('/dashboard')
+    }
   }
 
   const f = (k) => e => setForm(prev => ({...prev, [k]: e.target.value}))
@@ -55,9 +73,23 @@ export default function Register() {
             <Input label={t('auth.password_confirm')} type="password" required
               value={form.password2} onChange={f('password2')} placeholder="Passwort wiederholen" />
 
+            {TURNSTILE_SITE_KEY ? (
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={TURNSTILE_SITE_KEY}
+                onSuccess={setCaptchaToken}
+                onExpire={() => setCaptchaToken('')}
+                onError={() => { setCaptchaToken(''); setError('Sicherheitsabfrage konnte nicht geladen werden.') }}
+              />
+            ) : (
+              <div className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">
+                ⚠️ VITE_TURNSTILE_SITE_KEY ist nicht konfiguriert — Registrierung nicht möglich.
+              </div>
+            )}
+
             {error && <div className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</div>}
 
-            <Button type="submit" size="lg" disabled={loading} className="w-full mt-2">
+            <Button type="submit" size="lg" disabled={loading || !captchaToken} className="w-full mt-2">
               {loading ? t('auth.registering') : t('auth.register')}
             </Button>
           </form>
