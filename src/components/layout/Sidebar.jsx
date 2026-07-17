@@ -1,7 +1,7 @@
 ﻿import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
-import { LayoutDashboard, Database, FileText, QrCode, Settings, Shield, LogOut, Droplet, BookOpen, Calculator, ExternalLink } from 'lucide-react'
+import { LayoutDashboard, Database, FileText, QrCode, Settings, Shield, LogOut, Droplet, BookOpen, Calculator, ExternalLink, ClipboardList } from 'lucide-react'
 export function Sidebar({ onClose }) {
   const { t, i18n } = useTranslation()
   const { profile, signOut } = useAuth()
@@ -14,6 +14,7 @@ export function Sidebar({ onClose }) {
   navItems.push({ to: '/brunnen', icon: Droplet, label: t('nav.brunnen') })
   navItems.push({ to: '/normen', icon: BookOpen, label: t('nav.normen', 'Normen') })
   navItems.push({ to: '/rechner', icon: Calculator, label: t('nav.rechner', 'Rechner') })
+  navItems.push({ to: '/anhang', icon: ClipboardList, label: t('nav.anhang', 'Anhang') })
   navItems.push({ to: '/einstellungen', icon: Settings, label: t('nav.einstellungen') })
   if (profile?.rolle === 'admin') navItems.push({ to: '/admin', icon: Shield, label: t('nav.admin') })
   return (

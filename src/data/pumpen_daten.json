@@ -1,0 +1,7 @@
+{
+  "Mast_K1": { "P2_kW": 0.55, "In_A": 1.4, "Schutzart": "IP68", "Drehzahl": 2850 },
+  "Mast_K2": { "P2_kW": 0.85, "In_A": 2.1, "Schutzart": "IP68", "Drehzahl": 2850 },
+  "Mast_K3": { "P2_kW": 1.20, "In_A": 2.6, "Schutzart": "IP68", "Drehzahl": 2850 },
+  "Mast_K4": { "P2_kW": 1.50, "In_A": 3.2, "Schutzart": "IP68", "Drehzahl": 2850 },
+  "Mast_K5": { "P2_kW": 2.20, "In_A": 4.6, "Schutzart": "IP68", "Drehzahl": 2850 }
+}

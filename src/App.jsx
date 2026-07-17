@@ -15,6 +15,7 @@ import Admin from './pages/admin/Admin'
 import BrunnenMonitor from './modules/BrunnenMonitor'
 import NormenSuche from './pages/normen/NormenSuche'
 import Rechner from './pages/rechner/Rechner'
+import Anhang from './pages/anhang/Anhang'
 import { RoleRoute } from './components/auth/RoleRoute'
 
 function ProtectedRoute({ children }) {
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="/brunnen"       element={<BrunnenMonitor />} />
           <Route path="/normen"        element={<NormenSuche />} />
           <Route path="/rechner"       element={<Rechner />} />
+          <Route path="/anhang"        element={<Anhang />} />
           <Route path="/einstellungen" element={<Einstellungen />} />
           <Route path="/admin"         element={<RoleRoute erlaubt={['admin']}><Admin /></RoleRoute>} />
         </Route>
